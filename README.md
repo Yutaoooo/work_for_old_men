@@ -1,8 +1,15 @@
-# -
+#
 用与管理老年人互助会的公共项目
-## 添加互助会成员的姓名：
-yu tao
+## 互助会成员：
+Yu Tao
 
-chaoyu liang
+Chaoyu Liang
+
 Anyue FuCha
-xiantong Ding
+
+Xiantong Ding
+
+**waiting for Wei Yuan**
+
+## 任务：
+显著物体检测:无精确标注情况下的显著物体检测问题，扩展到弱监督学习和自监督学习方法
