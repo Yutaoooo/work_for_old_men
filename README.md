@@ -9,7 +9,7 @@ Anyue FuCha
 
 Xiantong Ding
 
-**waiting for Wei Yuan**
+Wei Yuan
 
 ## 任务：
 显著物体检测:无精确标注情况下的显著物体检测问题，扩展到弱监督学习和自监督学习方法
