@@ -45,11 +45,11 @@ if __name__ == '__main__':
     # test_path = os.path.join(data_root, 'ECSSD/test_images')
     # test_label = os.path.join(data_root, 'ECSSD/test_ground_truth_mask')
     # # -----MSRA-B dataset-----
-    image_path = os.path.join(data_root, 'MSRA-B/image')
-    label_path = os.path.join(data_root, 'MSRA-B/annotation')
-    train_file = os.path.join(data_root, 'MSRA-B/train_cvpr2013.txt')
-    valid_file = os.path.join(data_root, 'MSRA-B/valid_cvpr2013.txt')
-    test_file = os.path.join(data_root, 'MSRA-B/test_cvpr2013.txt')
+    image_path = 'D:/d_CODE/github/MSRA-B/image'
+    label_path = 'D:/d_CODE/github/MSRA-B/annotation'
+    train_file = 'D:/d_CODE/github/MSRA-B/train_cvpr2013.txt'
+    valid_file = 'D:/d_CODE/github/MSRA-B/train_cvpr2013.txt'
+    test_file = 'D:/d_CODE/github/MSRA-B/train_cvpr2013.txt'
     parser = argparse.ArgumentParser()
 
     # Hyper-parameters
