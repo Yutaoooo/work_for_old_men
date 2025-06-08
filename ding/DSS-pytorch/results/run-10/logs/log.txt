@@ -1,5 +1,0 @@
-epoch: [0/5], epoch_loss: [4.1583]
-epoch: [1/5], epoch_loss: [3.2506]
-epoch: [2/5], epoch_loss: [2.6042]
-epoch: [3/5], epoch_loss: [2.1435]
-epoch: [4/5], epoch_loss: [1.8215]
