@@ -48,8 +48,8 @@ if __name__ == '__main__':
     image_path = 'D:/d_CODE/github/MSRA-B/image'
     label_path = 'D:/d_CODE/github/MSRA-B/annotation'
     train_file = 'D:/d_CODE/github/MSRA-B/train_cvpr2013.txt'
-    valid_file = 'D:/d_CODE/github/MSRA-B/train_cvpr2013.txt'
-    test_file = 'D:/d_CODE/github/MSRA-B/train_cvpr2013.txt'
+    valid_file = 'D:/d_CODE/github/MSRA-B/valid_cvpr2013.txt'
+    test_file = 'D:/d_CODE/github/MSRA-B/test_cvpr2013.txt'
     parser = argparse.ArgumentParser()
 
     # Hyper-parameters
@@ -61,16 +61,16 @@ if __name__ == '__main__':
 
     # Training settings
     parser.add_argument('--vgg', type=str, default=vgg_path)
-    parser.add_argument('--train_path', type=str, default=image_path)
+    parser.add_argument('--train_path', type=str, default=image_path)   
     parser.add_argument('--label_path', type=str, default=label_path)
-    parser.add_argument('--train_file', type=str, default=train_file)
-    parser.add_argument('--epoch', type=int, default=500)
+    parser.add_argument('--train_file', type=str, default=train_file)   
+    parser.add_argument('--epoch', type=int, default=5)
     parser.add_argument('--batch_size', type=int, default=1)  # 8
     parser.add_argument('--val', type=bool, default=True)
     parser.add_argument('--val_path', type=str, default=image_path)
     parser.add_argument('--val_label', type=str, default=label_path)
     parser.add_argument('--val_file', type=str, default=valid_file)
-    parser.add_argument('--num_thread', type=int, default=4)
+    parser.add_argument('--num_thread', type=int, default=4)    
     parser.add_argument('--load', type=str, default='')
     parser.add_argument('--save_fold', type=str, default='./results')
     parser.add_argument('--epoch_val', type=int, default=10)

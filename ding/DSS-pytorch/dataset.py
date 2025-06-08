@@ -13,19 +13,65 @@ class ImageData(data.Dataset):
     t_transform: pre-process for label
     filename:    MSRA-B use xxx.txt to recognize train-val-test data (only for MSRA-B)
     """
+# image_path = 'D:/d_CODE/github/MSRA-B/image'
+# label_path = 'D:/d_CODE/github/MSRA-B/annotation'
+# train_file = 'D:/d_CODE/github/MSRA-B/train_cvpr2013.txt'
+# valid_file = 'D:/d_CODE/github/MSRA-B/valid_cvpr2013.txt'
+# test_file = 'D:/d_CODE/github/MSRA-B/test_cvpr2013.txt'
 
+# 第一项默认是照片路径
+# 第二项默认是标签路径
+# 第三项默认是256
+# 第四项默认是batch 为 1
+# 第五项默认是训练文件名字集合
+# 第六项默认是线程数 为 4 
+# train_loader = get_loader(config.train_path, config.label_path, config.img_size, config.batch_size,
+#                           filename=config.train_file, num_thread=config.num_thread)
     def __init__(self, img_root, label_root, transform, t_transform, filename=None):
         if filename is None:
-            self.image_path = list(map(lambda x: os.path.join(img_root, x), os.listdir(img_root)))
-            self.label_path = list(
-                map(lambda x: os.path.join(label_root, x.split('/')[-1][:-3] + 'png'), self.image_path))
+    # 如果没有提供文件名，则默认加载 img_root 目录下的所有文件
+    # 假设 img_root = 'D:/d_CODE/github/MSRA-B/image'
+    # 目录内容为 ['1.jpg', '2.jpg', '3.jpg']
+    # 则 self.image_path = ['D:/d_CODE/github/MSRA-B/image/1.jpg', 
+    #                       'D:/d_CODE/github/MSRA-B/image/2.jpg', 
+    #                       'D:/d_CODE/github/MSRA-B/image/3.jpg']
+            self.image_path = [os.path.join(img_root, fname) for fname in os.listdir(img_root)]
+    
+    # 对应的标签路径假设 label_root = 'D:/d_CODE/github/MSRA-B/annotation'
+    # 则 self.label_path = ['D:/d_CODE/github/MSRA-B/annotation/1.png', 
+    #                        'D:/d_CODE/github/MSRA-B/annotation/2.png', 
+    #                        'D:/d_CODE/github/MSRA-B/annotation/3.png']
+            self.label_path = [
+                os.path.join(label_root, os.path.splitext(os.path.basename(fname))[0] + '.png')
+                for fname in self.image_path
+            ]
         else:
-            lines = [line.rstrip('\n')[:-3] for line in open(filename)]
-            self.image_path = list(map(lambda x: os.path.join(img_root, x + 'jpg'), lines))
-            self.label_path = list(map(lambda x: os.path.join(label_root, x + 'png'), lines))
+    # 如果提供了文件名，则从文件中读取每一行的内容作为文件名
+    # 假设 filename = 'D:/d_CODE/github/MSRA-B/train_cvpr2013.txt'
+    # 文件内容为：
+    # 1
+    # 2
+    # 3
+    # 则 lines = ['1', '2', '3']
+            with open(filename, 'r') as file:
+                lines = [line.strip() for line in file]
+    # 读取文件名时去掉空格和换行符    
+    # 根据 lines 中的文件名生成图像路径
+    # 假设 img_root = 'D:/d_CODE/github/MSRA-B/image'
+    # 则 self.image_path = ['D:/d_CODE/github/MSRA-B/image/1.jpg', 
+    #                       'D:/d_CODE/github/MSRA-B/image/2.jpg', 
+    #                       'D:/d_CODE/github/MSRA-B/image/3.jpg']
+            self.image_path = [os.path.join(img_root, line + '.jpg') for line in lines]
+    
+    # 根据 lines 中的文件名生成标签路径
+    # 假设 label_root = 'D:/d_CODE/github/MSRA-B/annotation'
+    # 则 self.label_path = ['D:/d_CODE/github/MSRA-B/annotation/1.png', 
+    #                        'D:/d_CODE/github/MSRA-B/annotation/2.png', 
+    #                        'D:/d_CODE/github/MSRA-B/annotation/3.png']
+            self.label_path = [os.path.join(label_root, line + '.png') for line in lines]
 
-        self.transform = transform
-        self.t_transform = t_transform
+            self.transform = transform
+            self.t_transform = t_transform
 
     def __getitem__(self, item):
         image = Image.open(self.image_path[item])
@@ -51,7 +97,7 @@ def get_loader(img_root, label_root, img_size, batch_size, filename=None, mode='
         t_transform = transforms.Compose([
             transforms.Resize((img_size, img_size)),
             transforms.ToTensor(),
-            transforms.Lambda(lambda x: torch.round(x))  # TODO: it maybe unnecessary
+            transforms.Lambda(round_tensor)  # TODO: it maybe unnecessary
         ])
         dataset = ImageData(img_root, label_root, transform, t_transform, filename=filename)
         data_loader = data.DataLoader(dataset=dataset, batch_size=batch_size, shuffle=True, num_workers=num_thread,
@@ -65,6 +111,9 @@ def get_loader(img_root, label_root, img_size, batch_size, filename=None, mode='
         dataset = ImageData(img_root, label_root, None, t_transform, filename=filename)
         return dataset
 
+
+def round_tensor(x):
+    return torch.round(x)
 
 if __name__ == '__main__':
     import numpy as np
