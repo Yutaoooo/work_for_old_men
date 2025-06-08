@@ -18,7 +18,7 @@ class Solver(object):
         self.config = config
         self.beta = math.sqrt(0.3)  # for max F_beta metric
         # inference: choose the side map (see paper)
-        self.select = [1, 2, 3, 6]
+        self.select = [1, 2, 3, 6]      # 选择哪些侧边输出用于评估
         self.device = torch.device('cpu')
         self.mean = torch.Tensor([0.485, 0.456, 0.406]).view(3, 1, 1)
         self.std = torch.Tensor([0.229, 0.224, 0.225]).view(3, 1, 1)
@@ -58,7 +58,7 @@ class Solver(object):
         self.net.apply(weights_init)
         if self.config.load == '': self.net.base.load_state_dict(torch.load(self.config.vgg, map_location='cpu', weights_only=True))
         if self.config.load != '': self.net.load_state_dict(torch.load(self.config.load))
-        self.optimizer = Adam(self.net.parameters(), self.config.lr)
+        self.optimizer = Adam(self.net.parameters(), self.config.lr)        # 优化器
         self.print_network(self.net, 'DSS')
 
     # update the learning rate
@@ -66,7 +66,7 @@ class Solver(object):
         for param_group in self.optimizer.param_groups:
             param_group['lr'] = lr
 
-    # evaluate MAE (for test or validation phase)
+    # evaluate MAE (for test or validation phase) 平均绝对误差
     def eval_mae(self, y_pred, y):
         return torch.abs(y_pred - y).mean()
 
@@ -95,7 +95,7 @@ class Solver(object):
         self.net.train()
         return avg_mae / len(self.val_loader)
 
-    # test phase: using origin image size, evaluate MAE and max F_beta metrics
+    # test phase: using origin image size, evaluate MAE and max F_beta metrics  F_beta分数
     def test(self, num, use_crf=False):
         if use_crf: from tools.crf_process import crf
         avg_mae, img_num = 0.0, len(self.test_dataset)
@@ -137,7 +137,7 @@ class Solver(object):
                 y_pred = self.net(x)
                 loss = self.loss(y_pred, y)
                 loss.backward()
-                utils.clip_grad_norm_(self.net.parameters(), self.config.clip_gradient)
+                utils.clip_grad_norm_(self.net.parameters(), self.config.clip_gradient)     # 梯度裁剪
                 # utils.clip_grad_norm(self.loss.parameters(), self.config.clip_gradient)
                 self.optimizer.step()
                 loss_epoch += loss.item()
