@@ -56,7 +56,7 @@ class Solver(object):
         if self.config.mode == 'train': self.loss = Loss().to(self.device)
         self.net.train()
         self.net.apply(weights_init)
-        if self.config.load == '': self.net.base.load_state_dict(torch.load(self.config.vgg))
+        if self.config.load == '': self.net.base.load_state_dict(torch.load(self.config.vgg, map_location='cpu', weights_only=True))
         if self.config.load != '': self.net.load_state_dict(torch.load(self.config.load))
         self.optimizer = Adam(self.net.parameters(), self.config.lr)
         self.print_network(self.net, 'DSS')
